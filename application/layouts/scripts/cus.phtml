@@ -1,0 +1,32 @@
+<?php
+$this->headMeta()->appendHttpEquiv('Content-Type', 'text/html;charset=utf-8');
+$this->headTitle()->setSeparator(' - ');
+$this->headTitle('Zend Framework Tutorial');
+echo $this->doctype(); ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+ <?php echo $this->headMeta(); ?>
+ <?php echo $this->headTitle(); ?>
+ <?php echo $this->headLink()->prependStylesheet($this->baseUrl().'/css/bootstrap.css'); ?>
+</head>
+<body> 
+    <div class="container-sm|md|lg|xl">
+        <div class="content_area" >
+            <div class="content" >
+                <br><br>
+                <?php 
+                    session_start();
+                    error_reporting(0);
+                    $uniqid_id="create".uniqid(); ?>
+                <center>
+                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="<?='#'.$uniqid_id;?>">
+create Label
+</button>
+                </center>
+                </div></div></div>
+<div id="content">
+ <h1><?php echo $this->escape($this->title); ?></h1>
+ <?php echo $this->layout()->content; ?>
+</div>
+</body>
+</html>

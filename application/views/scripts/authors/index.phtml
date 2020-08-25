@@ -1,0 +1,168 @@
+<?php
+
+ 
+$uniqid_id="create".uniqid();
+$this->headTitle("Authors");
+$this->headScript()->prependFile('/js/authors.js');
+$sending="<center><a href=".$this->url(array('controller'=>'index',
+'action'=>'index'))."> <button type='button' class='btn btn-success' >
+Show Books
+</button></a><br> <br> 
+<button type='button' class='btn btn-success' data-toggle='modal' data-target='#".$uniqid_id."'>
+create Authors
+</button>
+ </center>";
+Zend_Layout::getMvcInstance()->assign('whatever', $sending);
+
+?>
+ 
+
+<!-- Modal -->
+<div class="modal fade" id="<?=$uniqid_id;?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">create Author</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form><center> 
+                        <br>
+                        <P>create Author </P>
+                        <br><input placeholder='Author ..' type="text" id="<?=$uniqid_id.'author_name';?>"
+                            name="Authorname_Author" value=""><br>
+
+                        <br><input type='email' placeholder='xxx@xxx.xxx' id="<?=$uniqid_id."author_email";?>"
+                            name="Authoremail_Author" value="" required><br><br>
+                        <br><br>
+</center>
+                    </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button id='validate' data-dismiss="modal" type="button" value="send" class="btn btn-primary"
+                            onclick="createform('create','<?=$uniqid_id.'author_name';?>','<?=$uniqid_id.'author_email';?>')">create
+                            Author</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<center id="table">
+<table class="table" >
+<tr>
+<th>ID</th>
+<th>Authors</th>
+ <th>Email</th>
+ <th>&nbsp;</th>
+</tr>
+
+<?php foreach($this->authors as $author) :
+            $unique_id1="delete".uniqid();
+            $unique_id2="edit".uniqid();
+    ?>
+<tr>
+<td><?php echo $this->escape($author->authorid);?></td>
+<td><?php echo $this->escape($author->author);?></td>
+ <td><?php echo $this->escape($author->Email);?></td>
+ <td>
+ 
+ <button type="button" class="btn btn-danger" data-toggle="modal" data-target="<?='#'.$unique_id1;?>">
+delete Authors
+</button>
+
+<div class="modal fade" id="<?=$unique_id1;?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"> Conform deletion</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+                        
+                                <form>
+                                    <br>
+                                    <P>Are you sure you want to delete this Author ? </P>
+                        
+
+                                </form>
+                           
+
+                                </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button id='validate' data-dismiss="modal" type="button" value="send" class="btn btn-danger"
+        onclick="delform('delete','<?=$author->authorid;?>')">delete
+                            Author</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+                         
+              
+
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="<?='#'.$unique_id2;?>">
+edit Authors
+</button>
+
+<div class="modal fade" id="<?=$unique_id2;?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">edit Author</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          
+                                <form>
+                                <center>   <br>
+                                    <P>Edit Author </P>
+                                    <br><input type="text" id="<?=$unique_id2.'author_name';?>" name="Authorname_Author"
+                                        value="<?=$author->author;?>"><br>
+
+                                    <br><input type="text" id="<?=$unique_id2."author_email";?>"
+                                        name="Authoremail_Author" value="<?=$author->Email;?>"><br>
+                                    <br>
+                          
+
+                                    <br><br></center>
+                                </form>
+                          
+ 
+
+</div>
+      <div class="modal-footer">
+        <button  type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button id='validate' data-dismiss="modal" type="button" value="send" class="btn btn-primary"
+        onclick="editform('edit','<?=$author->authorid;?>','<?=$unique_id2.'author_name';?>','<?=$unique_id2.'author_email';?>')">save
+                            Author</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+ </td>
+</tr>
+<?php endforeach; ?>
+</table></center>
+
+<script> 
+ 
+    var delete_url="<?=$this->url(array('action'=>'delete'));?>";
+    var create_url="<?=$this->url(array('action'=>'add'));?>";
+    var edit_url="<?=$this->url(array('action'=>'edit'));?>";
+    var index_url="<?=$this->url(array('action'=>'index'));?>";
+
+
+
+</script>

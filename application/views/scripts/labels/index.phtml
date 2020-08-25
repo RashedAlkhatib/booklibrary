@@ -1,0 +1,171 @@
+<?php
+
+ 
+$this->headTitle("Labels");
+$uniqid_id="create".uniqid(); 
+$this->headScript()->prependFile('/js/labels.js');
+
+$sending="<center><a href=".$this->url(array('controller'=>'index',
+'action'=>'index'))."> <button type='button' class='btn btn-success' >
+Show Books
+</button></a> <br><br> 
+<button type='button' class='btn btn-success' data-toggle='modal' data-target='#".$uniqid_id."'>
+create Label </button></center> ";
+Zend_Layout::getMvcInstance()->assign('whatever', $sending);
+
+?>
+ 
+                
+                
+ 
+
+<div class="modal fade" id="<?=$uniqid_id;?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">create Label</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form><center> 
+                        <br>
+                        <P>create Lable </P>
+                        <br><input placeholder='Lable ..' type="text" id="<?=$uniqid_id.'Labels';?>"
+                            name="Labels" value=""><br>
+
+                        <br>  
+
+                        <br><br>
+</center> </form>
+                    
+
+                        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button   data-dismiss="modal" type="button" value="send" class="btn btn-primary"
+        onclick="createform('create' ,'<?=$uniqid_id.'Labels';?>')">create
+                            Label</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+            </div>
+        </div>
+    </div><center id="table">
+<table  class="table">
+<tr>
+<th>ID</th>
+<th>label</th>
+ 
+ <th>&nbsp;</th>
+</tr>
+
+<?php foreach($this->labels as $label) : 
+            $unique_id1="delete".uniqid();
+            $unique_id2="edit".uniqid();
+    ?>
+<tr>
+<td><?php echo $this->escape($label->labelid);?></td>
+<td><?php echo $this->escape($label->Label);?></td>
+ 
+<td>
+
+<button type="button" class="btn btn-danger" data-toggle="modal" data-target="<?='#'.$unique_id1;?>">
+delete labels
+</button>
+
+<div class="modal fade" id="<?=$unique_id1;?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="exampleModalLabel"> Conform deletion</h5>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body"> <form>
+                <br>
+                <P>Are you sure you want to delete this Lable ? </P>
+
+
+            </form>
+            </div>
+<div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+<button id='validate' data-dismiss="modal" type="button" value="send" class="btn btn-danger"
+onclick="delform('delete','<?=$label->labelid;?>')">delete
+        Label</button>
+</div>
+</div>
+</div>
+</div>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="<?='#'.$unique_id2;?>">
+edit Labels
+</button>
+
+<div class="modal fade" id="<?=$unique_id2;?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="exampleModalLabel">edit label</h5>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+
+            <form><center>
+                <br>
+                <P>Edit Lable </P>
+                <br><input type="text" id="<?=$unique_id2.'Labels';?>" name="Labels"
+                    value="<?=$label->Label;?>"><br>
+
+            <br>
+                <br>
+
+
+                <br><br></center>
+            </form>
+            
+
+                </div>
+<div class="modal-footer">
+<button  type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+<button id='validate' data-dismiss="modal" type="button" value="send" class="btn btn-primary"
+onclick="editform('edit','<?=$label->labelid;?>','<?=$unique_id2.'Labels';?>')">save
+        label</button>
+</div>
+</div>
+</div>
+</div>
+
+
+</td>
+</tr>
+
+
+<?php
+
+ 
+?>
+
+
+<?php
+
+?>
+<?php endforeach; ?>
+</table>
+</center>
+<script> 
+ 
+    var delete_url="<?=$this->url(array('action'=>'delete'));?>";
+    var create_url="<?=$this->url(array('action'=>'add'));?>";
+    var edit_url="<?=$this->url(array('action'=>'edit'));?>";
+    var index_url="<?=$this->url(array('action'=>'index'));?>";
+
+
+
+</script>

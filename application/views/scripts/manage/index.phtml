@@ -1,0 +1,308 @@
+<?php
+ 
+$this->headTitle("Manage Books");
+$uniqid_id="create".uniqid();
+$this->headScript()->prependFile('/js/manage.js');
+
+$sending="<center><a href=".$this->url(array('controller'=>'index',
+'action'=>'index'))."> <button type='button' class='btn btn-success' >
+Show Books
+</button></a><br><br>
+<button type='button' class='btn btn-success' data-toggle='modal' data-target='#".$uniqid_id."'>
+create Book </button></center> ";
+Zend_Layout::getMvcInstance()->assign('whatever', $sending);
+?>
+ 
+
+                
+<!-- create Modal -->
+<div class="modal fade" id="<?=$uniqid_id;?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">create Book</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+
+
+                        <form id="<?=$uniqid_id.'create';?>" method="post" name="new"  enctype="multipart/form-data" required>
+                            <table class="tabel">
+                                <thead>
+                                    <tr>
+                                        <th> Enter Blog title : <br>
+                                        <input placeholder='Book Title' class="form-control" type="text"
+                                                id="<?=$uniqid_id.'Booktitle_Book';?>" name="Booktitle_Book" required>
+                                                <input  type="hidden" name="op_type" value="create" >
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+
+                                        <th>Enter Book author : <br> Create <a href="/ShowAuthors.php">NEW ? </a>
+
+                                            <select placeholder='Book Author' class="form-control" id="<?=$uniqid_id.'authorid';?>"
+                                                name="author_book">
+ 
+                                                <?php
+
+foreach($this->authors as $author):
+    $Authors_concat =  $author->author.','.$Authors_concat;
+    $Authors_ID_concat =  $author->authorid.','.$Authors_ID_concat;
+?>
+                                <?php
+ 
+if($author->authorid!=""){
+    ?> <option  value="<?=$author->authorid;?>|<?=$author->authorid;?>"><?=$author->author;?></option> <?php
+    } 
+endforeach;
+        ?>      
+                            </select>
+
+                                        </th>
+                                    </tr>
+                                    <br>
+                                    <tr>
+<th> Book Lables : <a href="/ShowLabels.php">
+     Add Labels ?
+        </a>
+        <br> <select class="form-control" multiple id="<?=$uniqid_id.'label';?>" name="label[]">
+
+ <?php
+ 
+                 
+  foreach($this->labels as $label):
+    $Labels_concat =  $label->Label.','.$Labels_concat;
+    $Labels_ID_concat =  $label->labelid.','.$Labels_ID_concat;
+
+ if($label->labelid!="" ){
+ ?>
+ <option  value="<?=$label->labelid;?>"><?=$label->Label;?></option> 
+ <?php
+ } 
+
+endforeach;
+
+?></select> </th>
+ </tr>
+ <tr>
+                                        <th> Enter Book Description :
+
+
+
+                                            <input placeholder='Description' class="form-control"
+                                                style="height:300px ; width: 300px;" type="text"
+                                                id="<?=$uniqid_id.'Bookdiscreption_Book';?>" name="Bookdiscreption_Book" required>
+
+                                        </th>
+                                    <tr>
+                                        <th> select Image :
+
+
+                                            <input type="file" id="file" name="file" required>
+                                            <br><br>
+                                        </th>
+
+                                    </tr>
+                                    <tr>
+
+                                        <th>
+       
+                        </form>
+                        </th>
+                        </tr>
+                        <tr>
+                            <th>
+                                <a href="/index.php">
+                                    Show Books ?
+                                </a>
+                            </th>
+                        </tr>
+                        <tr>
+
+
+                        </tr>
+                        </tbody>
+                        </table>
+
+                </div>
+                <br>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button id='validate' data-dismiss="modal" type="button" value="send" class="btn btn-primary"
+        onclick="runform('<?='#'.$uniqid_id.'create';?>')">create
+                            Book</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+            </center>
+
+
+
+
+    </div>
+ 
+
+
+ 
+
+
+<!-- delete Modal -->
+<div class="modal fade" id="deletemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"> conform deletion?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      Are you sure you want to delete this book  ?
+      <form id="delform" method="post" name="newxnxx" class="deleteformclass" enctype="multipart/form-data">
+ 
+      <input type="hidden" id ="deleteid" class="deleteclass" name="id" value=""  > <br />
+<input type="hidden"  name="op_type" value="delete"  > <br />
+ 
+</form>  
+    </div>
+      
+      <div class="modal-footer">
+        <button  onclick="resetid()" type="button" class="btn btn-secondary" data-dismiss="modal" >Close</button>
+        <button type="button" class="btn btn-danger" onclick="delform()" data-dismiss="modal">delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- edit Modal -->
+<div class="modal fade top" id="editmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"> Edit Book :</h5>
+        <button onclick="resetid()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+      <form  id="editform" enctype="multipart/form-data" class="editformclass" method="post" name="edit">
+
+<center>
+<input type="hidden"  value="edit" name="op_type">
+<input type="hidden" id="editid" value="" name="id"> 
+<label for="title_id">Book Title :</label>
+<input style= "width:90%;" placeholder="Book Title" class="title_class" value="" type="text" id="title_id" name="Booktitle_Book" required>
+<br><br>
+<label for="author_id">Authors :</label>
+<select style= "width:90%;" class="browser-default custom-select mb-4"  id="author_id" name="author_book">
+
+
+</select>
+
+<label for="label_id">Labels :</label>
+<select style= "width:90%;" multiple id="label_id" name="label[]" class="browser-default custom-select mb-4">
+    <option value="" disabled="">Select Labels :</option>
+
+</select>
+<label for="descreption_id">Book description :</label>
+<textarea id="descreption_id" name="Bookdiscreption_Book" value="" required style= "width:90%;" class="form-control rounded-0" 
+          rows="3" placeholder="Description"></textarea>
+<br> <div class="image">
+<div class="overlay">
+
+
+<button onclick="changecurrentimg('')" class="btn btn-danger close " style="border-radius: 50%; " type="button"  >&times;</button> 
+
+
+</div>
+<label for="image_id">Photo : </label><br>
+<img id="image_id" src="" alt="No Image" class="mr-3 mt-3 rounded-circle" style="width:150px; ">
+</div>
+
+<br> <div class="showhide">
+<div style= "width:90%;"class="input-group mb-4">
+    <div class="input-group-prepend">
+        <span class="input-group-text">Upload</span>
+    </div>
+    <div  class="custom-file">
+        <input accept=".png, .jpg, .jpeg"  name="file"  type="file" class="custom-file-input" id="show_img" aria-describedby="fileInput">
+        <label class="custom-file-label" for="show_img">Select Photo</label>
+    </div>
+</div></div>
+
+
+</center></form>
+
+
+    </div>
+      
+      <div class="modal-footer">
+        <button  onclick="resetid()" type="button" class="btn btn-secondary" data-dismiss="modal" >Close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="editform('#editform')">save</button>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+   <div class="row m-3" >
+        <div class="col">
+
+
+            <table id="x" class="table">
+                <thead>
+                    <tr>
+                        <th>ID:</th>
+                        <th>Image:</th>
+                        <th> Author</th>
+                        <th>Title:</th>
+                        <th>Description:</th>
+                        <th>Labels:</th>
+                        <th>Actions:</th>
+                        
+
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>ID:</th>
+                        <th>Image:</th>
+                        <th> Author</th>
+                        <th>Title:</th>
+                        <th>Description:</th>
+                        <th>Labels:</th>
+                        <th>Actions:</th>
+
+                    </tr>
+                </tfoot>
+            </table>
+
+
+
+
+        </div>
+    </div>
+ 
+    <script> 
+    var authorid= '<?=$Authors_ID_concat;?>';
+    var authorr='<?=$Authors_concat;?>'; 
+    var labellid= '<?=$Labels_ID_concat;?>';
+    var labell='<?=$Labels_concat;?>'; 
+    var delete_url="<?=$this->url(array('action'=>'delete'));?>";
+    var create_url="<?=$this->url(array('action'=>'add'));?>";
+    var edit_url="<?=$this->url(array('action'=>'edit'));?>";
+    var getdata_url="<?=$this->url(array('action'=>'getdata'));?>";
+
+
+
+</script>
+ 
+ 

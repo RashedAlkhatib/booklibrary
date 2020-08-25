@@ -1,0 +1,206 @@
+<?php
+ 
+ 
+$this->headTitle("Book");
+$this->headScript()->appendFile('/js/authors.js', 'text/javascript');
+
+error_reporting(0);
+
+?>
+
+ 
+
+<center>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <form method="get">
+                    <th> Book Label: <select multiple id="label" name="label[]">
+                            <?php
+                            $sending='<br><a href="'.$this->url(array('controller'=>'manage',
+                            'action'=>'index')).'"> <button type="button" class="btn btn-success" >
+                           Manage Books
+                           </button></a>';
+ Zend_Layout::getMvcInstance()->assign('whatever', $sending);
+
+ $index=0;
+
+ foreach($this->labels as $label):
+ 
+?>
+
+                            <?php
+
+if($_GET["label"][$index]==$label->labelid ){
+
+?> <option selected value="<?=$label->labelid;?>"><?=$label->Label;?></option> <?php
+}else{
+?>
+                            <option value="<?=$label->labelid;?>"><?=$label->Label;?></option>
+                            <?php
+} 
+
+$index++;
+endforeach
+ 
+?>
+                        </select></th>
+                    <th> Book Author: <select placeholder='Book Author' id="auhtor_book" name="auhtor_book">
+                            <option value="">Empty</option>
+                            <?php
+
+foreach($this->authors as $author):
+
+?><?php
+ 
+if($_GET["auhtor_book"]==$author->authorid){
+    ?> <option selected value="<?=$author->authorid;?>"><?=$author->author;?></option> <?php
+    }else{
+        ?>
+                            <option value="<?=$author->authorid;?>"><?=$author->author;?></option>
+                            <?php
+    }  
+endforeach
+ 
+
+?>
+                        </select></th>
+
+
+                    <th> Book Title :
+                        <div class="md-form mt-0">
+                            <?php if($_GET["title"]==""){
+                                ?>
+                            <input class="form-control" type="text" placeholder='title' id="title" name="title">
+                            <?php
+
+                                
+                            }else{?>
+                            <input class="form-control" type="text" value="<?=$_GET["title"];?>" placeholder='title'
+                                id="title" name="title">
+
+                            <?php
+                            } ?>
+                        </div>
+                    </th>
+
+
+
+                    <th> <button class="btn btn-primary" name="xxx">Search</button></th>
+                    <th>
+                </form>
+                <a href="<?php echo $this->url(array('controller'=>'index',
+ 'action'=>'index'));?>">
+                    <button class="btn btn-danger">Clear Search</button></a></th>
+            </tr>
+        </thead>
+    </table>
+
+</center>
+
+<div class="table-responsive-sm">
+    <center>
+
+
+        <?php 
+ 
+ $auid=$_GET["auhtor_book"];
+// $titel=$_POST["title"];
+ $titel=$_GET["title"];
+ $label=$_GET["label"];
+ $testt=new Application_Model_DbTable_Books();
+ 
+$testt->where= $testt->where($label, $auid,$titel);
+ 
+ 
+$start=0;
+    $limit=6;
+
+  
+ 
+   
+    $testt->limit=$limit;
+    $testt->start=$start;
+    $num_of_books=count($this->books);
+
+    $total=$num_of_books;
+
+     if(isset($_GET['id']))
+     {
+          $id=$_GET['id'] ; 
+          $testt->start=($id-1)*$testt->limit;
+   
+                            }
+              else
+
+              {
+
+          $id=1;
+     }
+     $page=ceil($total/$limit);
+   
+
+?>
+        <div class="row m-3">
+            <div class="col">
+                <div class="grid-container">
+
+                    <?php foreach($testt->getBook() as $book) : ?>
+
+
+                    <div class="grid-item">
+                        <div class="container mt-3">
+                            <h3>
+                                <image src="/<?=$this->escape($book->image_name);?>" alt="No Image"
+                                    class="mr-3 mt-3 rounded-circle" style="width:150px;">
+                            </h3>
+
+                            <p><B>Title :</B> <?=$this->escape($book->title);?></p>
+                            <p><B>Author :</B> <?=$this->escape($book->author);?></p>
+                            <p><B>Labels :</B> <?=$this->escape($book->label);?></p>
+                            <div class="media border p-3">
+
+
+
+                                <div class="media-body">
+                                    <h4>Book Description :</h4>
+                                    <p> <?=$this->escape($book->description)?></p>
+                                    <p>
+
+
+                                    </p>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <?php endforeach; ?> </div>
+
+            </div>
+
+        </div>
+
+
+        <table class="table">
+            <tr>
+                <?php if($id > 1) {?> <a href="?id=<?php echo ($id-1) ?>"><button
+                        class="btn btn-danger">Previous</button></a> &nbsp;&nbsp;<?php }?>
+                <?php
+ for($i=1;$i <= $page;$i++){
+  ?>
+                <a href="?id=<?php echo $i ?>"><button class="btn btn-primary"><?php echo $i;?></button></a>
+                &nbsp;&nbsp;
+                <?php
+  }
+ ?>
+                <?php if($id!=$page)
+
+  { }?>
+            <tr>
+        </table>
+
+    </center>
+</div>
